@@ -3,6 +3,8 @@ import dayjs from "dayjs";
 import { useCalenderContext } from "../context/CalanderContext/useCalenderContext";
 import CloseIcon from "@mui/icons-material/Close";
 import image from "../data/gmeetImg.png";
+import OutsideClickHandler from "./OutsideClickHandler";
+import { TCalenderState } from "../context/CalanderContext/CalenderContext";
 
 type TMeetingInfoProps = {
   meetingIds: number[];
@@ -11,6 +13,45 @@ type TMeetingInfoProps = {
 const MODAL_WIDTH = 240;
 
 const OFFSET = 10;
+interface IEventProps{
+  closePopup:any;
+  meeting:any;
+}
+
+const EventDetails = (props:IEventProps) =>{
+  const {closePopup,meeting} = props;
+  const eventInfo = meeting?.user_det;
+  const date = dayjs(meeting.start).format("DD MMM YYYY");
+  const candidate = eventInfo?.candidate;
+return  <OutsideClickHandler onOutsideClick={closePopup}>
+  <div className="custom-event-popover">
+ <div className="event-content">
+   <div className="event-content-left">
+     <div className="event-content-details">
+<div className="event-label">{`Interview with: ${candidate?.candidate_firstName}`+ ' '+`${candidate?.candidate_lastName}`}</div>
+<div className="event-label">{`Position: ${eventInfo?.job_id?.jobRequest_Role}`}</div>
+<div className="event-label">{`Created by: ${eventInfo?.handled_by?.firstName}`+' '+ `${eventInfo?.handled_by?.lastName}`}</div>
+<div className="event-label">{`Interview date: ${date}`}</div>
+<div className="event-label">Interview via: Google Meet</div>
+      </div>
+
+     <div>
+       <button className="event-left-btn">Resume.docx</button>
+
+       <button className="event-left-btn">Aadhar card</button>
+     </div>
+   </div>
+
+   <div className="event-image-btn">
+     <img src={image} />
+
+     <button className="join-btn">JOIN</button>
+   </div>
+ </div>
+</div>
+</OutsideClickHandler>
+
+}
 
 const MeetingInfo = (props: TMeetingInfoProps) => {
   const { meetingIds } = props;
@@ -41,6 +82,10 @@ const MeetingInfo = (props: TMeetingInfoProps) => {
     toggle();
 
     setMeetingInfo(!showMeetingInfo);
+  };
+  const closePopup = () => {
+    console.log("Clicked outside! Closing popup.");
+    setMeetingInfo(false);
   };
 
   const showCount = meetingIds.length > 1;
@@ -119,25 +164,7 @@ const MeetingInfo = (props: TMeetingInfoProps) => {
         </div>
       </>
       {showMeetingInfo && (
-        <div className="custom-event-popover">
-          <div className="event-content">
-            <div className="event-content-left">
-              <div className="event-content-details">Hello World</div>
-
-              <div>
-                <button className="event-left-btn">Resume.docx</button>
-
-                <button className="event-left-btn">Aadhar card</button>
-              </div>
-            </div>
-
-            <div className="event-image-btn">
-              <img src={image} />
-
-              <button className="join-btn">JOIN</button>
-            </div>
-          </div>
-        </div>
+       <EventDetails meeting = {meeting} closePopup={closePopup}/>
       )}
     </div>
   );

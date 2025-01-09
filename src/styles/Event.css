@@ -66,6 +66,7 @@
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     width: 440px;
     z-index: 1000;
+    /* right: 100%; */
 }
 .event-content{
     width: 415px;
@@ -91,7 +92,10 @@
     margin-left: 10px;
 }
 .event-content-details{
-    height: 70%
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 .event-image-btn{
     width: 50%;
@@ -113,4 +117,8 @@
     height: 25px;
     margin-top: 10px;
     width: 40%;
+}
+.event-label{
+    padding: 10px;
+    font-size: 15px;
 }

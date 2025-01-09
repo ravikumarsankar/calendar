@@ -12,5 +12,9 @@
 	.chevron-btn{
 		border: 2px solid #5195fc!important;
 		border-radius: 4px;
+		cursor: pointer;
+	}
+	.chevron-btn:hover{
+		background: #5195fc;
 	}
 }
