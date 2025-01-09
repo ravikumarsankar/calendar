@@ -7,6 +7,7 @@
     border-radius: 4px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, .139);
     cursor: pointer;
+    width: 125px;
 }
 .event-container:hover{
     background:  #3788d8;
@@ -15,6 +16,8 @@
 .data-wrap{
     font-size: 12px;
     padding: 4px;
+    font-weight: 400;
+    text-align: left;
 }
 .left-bar{
     width: 10;
@@ -49,6 +52,8 @@
 .event-data{
     padding: 4px;
     font-size: 13px;
+    font-weight: 400;
+    text-align: left;
 }
 .event-data:hover{
     background: #3788d8;
@@ -68,6 +73,10 @@
     z-index: 1000;
     /* right: 100%; */
 }
+  .monthView{
+    right: 100%;
+    top:-87px;
+  }
 .event-content{
     width: 415px;
     height: 306px;
@@ -121,4 +130,5 @@
 .event-label{
     padding: 10px;
     font-size: 15px;
+    font-weight: 400;
 }

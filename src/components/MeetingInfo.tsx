@@ -4,6 +4,7 @@ import { useCalenderContext } from "../context/CalanderContext/useCalenderContex
 import CloseIcon from "@mui/icons-material/Close";
 import image from "../data/gmeetImg.png";
 import OutsideClickHandler from "./OutsideClickHandler";
+import classNames from "classnames";
 
 type TMeetingInfoProps = {
   meetingIds: number[];
@@ -15,15 +16,17 @@ const OFFSET = 10;
 interface IEventProps{
   closePopup:any;
   meeting:any;
+  meetingView:string;
 }
 
 const EventDetails = (props:IEventProps) =>{
-  const {closePopup,meeting} = props;
+  const {closePopup,meeting,meetingView} = props;
   const eventInfo = meeting?.user_det;
   const date = dayjs(meeting.start).format("DD MMM YYYY");
   const candidate = eventInfo?.candidate;
+  const dayView = meetingView==='month'?'monthView':'';
 return  <OutsideClickHandler onOutsideClick={closePopup}>
-  <div className="custom-event-popover">
+  <div className={classNames("custom-event-popover",dayView)}>
  <div className="event-content">
    <div className="event-content-left">
      <div className="event-content-details">
@@ -76,14 +79,14 @@ const MeetingInfo = (props: TMeetingInfoProps) => {
     setShowAllEvents(!showAllEvents);
   };
   const onEventClk = (e: any) => {
+    if(e.target.id!=='closeIcon'){
     e.stopPropagation();
-
-    toggle();
-
+    
     setMeetingInfo(!showMeetingInfo);
+    }
   };
   const closePopup = () => {
-    console.log("Clicked outside! Closing popup.");
+   
     setMeetingInfo(false);
   };
 
@@ -111,6 +114,7 @@ const MeetingInfo = (props: TMeetingInfoProps) => {
         </div>
       )}
       {showAllEvents && (
+       
         <div
           onClick={(e) => onEventClk(e)}
           className="event-list"
@@ -123,13 +127,14 @@ const MeetingInfo = (props: TMeetingInfoProps) => {
           }}
         >
           <div className="meeting-header">
-            <div className="meeting-label">Meetings</div>
+         <div className="meeting-label">Meetings</div>
 
-            <CloseIcon
-              style={{ width: "14px", height: "14px" }}
-              onClick={toggle}
-            />
-          </div>
+         <CloseIcon
+           style={{ width: "14px", height: "14px" }}
+           onClick={toggle}
+           id = 'closeIcon'
+         />
+       </div>
           {meetingIds.map((id) => {
             const event = meetingIdMap[previewMeetingId];
             const date = dayjs(event.start).format("DD MMM YYYY");
@@ -163,7 +168,7 @@ const MeetingInfo = (props: TMeetingInfoProps) => {
         </div>
       </>
       {showMeetingInfo && (
-       <EventDetails meeting = {meeting} closePopup={closePopup}/>
+       <EventDetails meeting = {meeting} meetingView = {state.viewMode} closePopup={closePopup}/>
       )}
     </div>
   );
