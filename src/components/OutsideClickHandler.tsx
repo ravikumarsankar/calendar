@@ -1,6 +1,10 @@
-import React, { useEffect, useRef } from "react";
-
-const OutsideClickHandler = ({ children, onOutsideClick }) => {
+import  { useEffect, useRef } from "react";
+interface IOutsideClickProps{
+  children:any;
+  onOutsideClick:any;
+}
+const OutsideClickHandler = (props:IOutsideClickProps) => {
+  const {children,onOutsideClick} = props;
   const wrapperRef = useRef<any>(null);
 
   useEffect(() => {

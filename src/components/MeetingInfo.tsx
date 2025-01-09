@@ -4,7 +4,6 @@ import { useCalenderContext } from "../context/CalanderContext/useCalenderContex
 import CloseIcon from "@mui/icons-material/Close";
 import image from "../data/gmeetImg.png";
 import OutsideClickHandler from "./OutsideClickHandler";
-import { TCalenderState } from "../context/CalanderContext/CalenderContext";
 
 type TMeetingInfoProps = {
   meetingIds: number[];

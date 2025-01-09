@@ -1,4 +1,4 @@
-import { TViewMode } from '../context/CalenderContext';
+import { TViewMode } from "../context/CalanderContext/CalenderContext";
 
 export const getUpcomingDates = (startDate: Date, length: number) => {
 	const datesArray: Date[] = [];

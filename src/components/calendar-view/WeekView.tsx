@@ -1,4 +1,3 @@
-import React from 'react';
 import { useCalenderContext } from '../../context/CalanderContext/useCalenderContext';
 import { CELL_HEIGHT, DEFAULT_COLORS } from '../Calendar';
 import { getUpcomingDates } from '../Helper';
