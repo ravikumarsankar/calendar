@@ -51,7 +51,7 @@
 }
 .event-data{
     padding: 4px;
-    font-size: 13px;
+    font-size: 11px;
     font-weight: 400;
     text-align: left;
 }
@@ -128,7 +128,12 @@
     width: 40%;
 }
 .event-label{
-    padding: 10px;
-    font-size: 15px;
+    padding: 10px 0px 0px 10px;
+    font-size: 13px;
     font-weight: 400;
+}
+.meeting-icon{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }

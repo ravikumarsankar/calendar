@@ -4,6 +4,8 @@ import { useCalenderContext } from "../context/CalanderContext/useCalenderContex
 import CloseIcon from "@mui/icons-material/Close";
 import image from "../data/gmeetImg.png";
 import OutsideClickHandler from "./OutsideClickHandler";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
+import DeleteIcon from "@mui/icons-material/Delete";
 import classNames from "classnames";
 
 type TMeetingInfoProps = {
@@ -13,50 +15,73 @@ type TMeetingInfoProps = {
 const MODAL_WIDTH = 240;
 
 const OFFSET = 10;
-
-interface IEventProps{
-  closePopup:any;
-  meeting:any;
-  meetingView:string;
+const meetingIconDimens = {
+  width:'16px',
+  height:'16px',
+  paddingLeft:'4px',
 }
 
-const EventDetails = (props:IEventProps) =>{
-  const {closePopup,meeting,meetingView} = props;
+interface IEventProps {
+  closePopup: any;
+  meeting: any;
+  meetingView: string;
+}
+
+const getCalendarDetails = (meeting: any) => {
+  const timeStart = dayjs(meeting.start).format("HH : mm");
+  const timeEnd = dayjs(meeting.end).format("HH : mm");
+  const timeNo = timeStart.split(":");
+  const notation = +timeNo[0] >= 12 ? "PM" : "AM";
+  return { timeStart, timeEnd, notation };
+};
+
+const EventDetails = (props: IEventProps) => {
+  const { closePopup, meeting, meetingView } = props;
   const eventInfo = meeting?.user_det;
   const date = dayjs(meeting.start).format("DD MMM YYYY");
   const candidate = eventInfo?.candidate;
-  const dayView = meetingView==='month'?'monthView':'';
-return  <OutsideClickHandler onOutsideClick={closePopup}>
-  <div className={classNames("custom-event-popover",dayView)}>
- <div className="event-content">
-   <div className="event-content-left">
-     <div className="event-content-details">
-<div className="event-label">{`Interview with: ${candidate?.candidate_firstName}`+ ' '+`${candidate?.candidate_lastName}`}</div>
-<div className="event-label">{`Position: ${eventInfo?.job_id?.jobRequest_Role}`}</div>
-<div className="event-label">{`Created by: ${eventInfo?.handled_by?.firstName}`+' '+ `${eventInfo?.handled_by?.lastName}`}</div>
-<div className="event-label">{`Interview date: ${date}`}</div>
-<div className="event-label">Interview via: Google Meet</div>
+  const dayView = meetingView === "month" ? "monthView" : "";
+  const { timeStart, timeEnd, notation } = getCalendarDetails(meeting);
+
+  return (
+    <OutsideClickHandler onOutsideClick={closePopup}>
+      <div className={classNames("custom-event-popover", dayView)}>
+        <div className="event-content">
+          <div className="event-content-left">
+            <div className="event-content-details">
+              <div className="event-label">
+                {`Interview with: ${candidate?.candidate_firstName}` +
+                  " " +
+                  `${candidate?.candidate_lastName}`}
+              </div>
+              <div className="event-label">{`Position: ${eventInfo?.job_id?.jobRequest_Role}`}</div>
+              <div className="event-label">
+                {`Created by: ${eventInfo?.handled_by?.firstName}` +
+                  " " +
+                  `${eventInfo?.handled_by?.lastName}`}
+              </div>
+              <div className="event-label">{`Interview date: ${date}`}</div>
+              <div className="event-label">{`Interview time:  ${timeStart} - ${timeEnd} ${notation}`}</div>
+              <div className="event-label">Interview via: Google Meet</div>
+            </div>
+
+            <div>
+              <button className="event-left-btn">Resume.docx</button>
+
+              <button className="event-left-btn">Aadhar card</button>
+            </div>
+          </div>
+
+          <div className="event-image-btn">
+            <img src={image} />
+
+            <button className="join-btn">JOIN</button>
+          </div>
+        </div>
       </div>
-
-     <div>
-       <button className="event-left-btn">Resume.docx</button>
-
-       <button className="event-left-btn">Aadhar card</button>
-     </div>
-   </div>
-
-   <div className="event-image-btn">
-     <img src={image} />
-
-     <button className="join-btn">JOIN</button>
-   </div>
- </div>
-</div>
-</OutsideClickHandler>
-
-}
-
-
+    </OutsideClickHandler>
+  );
+};
 
 const MeetingInfo = (props: TMeetingInfoProps) => {
   const { meetingIds } = props;
@@ -74,7 +99,7 @@ const MeetingInfo = (props: TMeetingInfoProps) => {
   });
   useEffect(() => {
     if (state.viewMode === "month") {
-      setPosition({ right: (MODAL_WIDTH / 2 )+ OFFSET, top: OFFSET });
+      setPosition({ right: MODAL_WIDTH / 2 + OFFSET, top: OFFSET });
     }
   }, [state.viewMode]);
 
@@ -82,21 +107,20 @@ const MeetingInfo = (props: TMeetingInfoProps) => {
     setShowAllEvents(!showAllEvents);
   };
   const onEventClk = (e: any) => {
-    if(e.target.id!=='closeIcon'){
-    e.stopPropagation();
-    
-    setMeetingInfo(!showMeetingInfo);
+    if (e.target.id !== "closeIcon") {
+      e.stopPropagation();
+
+      setMeetingInfo(!showMeetingInfo);
     }
   };
   const closePopup = () => {
-   
     setMeetingInfo(false);
   };
 
   const showCount = meetingIds.length > 1;
   const jobTitle = meeting?.job_id?.jobRequest_Title;
   const interviewName = meeting?.user_det?.handled_by;
-  
+  const { notation } = getCalendarDetails(meeting);
   return (
     <div className="event-container" onClick={toggle}>
       {showCount && !showAllEvents && (
@@ -120,7 +144,6 @@ const MeetingInfo = (props: TMeetingInfoProps) => {
         </div>
       )}
       {showAllEvents && (
-       
         <div
           onClick={(e) => onEventClk(e)}
           className="event-list"
@@ -133,21 +156,20 @@ const MeetingInfo = (props: TMeetingInfoProps) => {
           }}
         >
           <div className="meeting-header">
-         <div className="meeting-label">Meetings</div>
+            <div className="meeting-label">Meetings</div>
 
-         <CloseIcon
-           style={{ width: "14px", height: "14px" }}
-           onClick={toggle}
-           id = 'closeIcon'
-         />
-       </div>
+            <CloseIcon
+              style={{ width: "14px", height: "14px" }}
+              onClick={toggle}
+              id="closeIcon"
+            />
+          </div>
           {meetingIds.map((id) => {
             const event = meetingIdMap[previewMeetingId];
             const job_Title = event?.job_id?.jobRequest_Title;
             const interviewer = event?.user_det?.handled_by;
             const date = dayjs(event.start).format("DD MMM YYYY");
-            const timeStart = dayjs(event.start).format("HH : mm");
-            const timeEnd = dayjs(event.end).format("HH : mm");
+            const { timeEnd, timeStart, notation } = getCalendarDetails(event);
             return (
               <div key={id} className="event-meeting-container">
                 <div
@@ -158,9 +180,20 @@ const MeetingInfo = (props: TMeetingInfoProps) => {
                   }}
                 />
                 <div className="event-data">
-                <div>{job_Title}</div>
-                <div>{`Interviewer:${interviewer?.firstName}`+' '+`${interviewer.lastName}`}</div>
-                  <div>{`Date: ${date} | Time: ${timeStart} - ${timeEnd}`}</div>
+                  <div className="meeting-icon">
+                    <div>{job_Title}</div>
+                  <div>
+                    <BorderColorIcon style={meetingIconDimens}/>
+                    <DeleteIcon style={{...meetingIconDimens,color:'red'}}/>
+                  </div>
+                  </div>
+
+                  <div>
+                    {`Interviewer:${interviewer?.firstName}` +
+                      " " +
+                      `${interviewer.lastName}`}
+                  </div>
+                  <div>{`Date: ${date} | Time: ${timeStart} - ${timeEnd}${notation}`}</div>
                 </div>
               </div>
             );
@@ -171,12 +204,22 @@ const MeetingInfo = (props: TMeetingInfoProps) => {
         <div className="left-bar" />
         <div className="data-wrap">
           <div>{jobTitle}</div>
-          <div>{`Interviewer:${interviewName?.firstName}`+' '+`${interviewName.lastName}`}</div>
-          <div>{`Time: ${start.format("hh:mm")} - ${end.format("hh:mm")}`}</div>
+          <div>
+            {`Interviewer:${interviewName?.firstName}` +
+              " " +
+              `${interviewName.lastName}`}
+          </div>
+          <div>{`Time: ${start.format("hh:mm")} - ${end.format(
+            "hh:mm"
+          )}${notation}`}</div>
         </div>
       </>
       {showMeetingInfo && (
-       <EventDetails meeting = {meeting} meetingView = {state.viewMode} closePopup={closePopup}/>
+        <EventDetails
+          meeting={meeting}
+          meetingView={state.viewMode}
+          closePopup={closePopup}
+        />
       )}
     </div>
   );
