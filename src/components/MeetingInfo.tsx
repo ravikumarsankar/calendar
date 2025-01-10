@@ -13,6 +13,7 @@ type TMeetingInfoProps = {
 const MODAL_WIDTH = 240;
 
 const OFFSET = 10;
+
 interface IEventProps{
   closePopup:any;
   meeting:any;
@@ -55,6 +56,8 @@ return  <OutsideClickHandler onOutsideClick={closePopup}>
 
 }
 
+
+
 const MeetingInfo = (props: TMeetingInfoProps) => {
   const { meetingIds } = props;
   const { state } = useCalenderContext();
@@ -71,7 +74,7 @@ const MeetingInfo = (props: TMeetingInfoProps) => {
   });
   useEffect(() => {
     if (state.viewMode === "month") {
-      setPosition({ right: MODAL_WIDTH / 2 + OFFSET, top: OFFSET });
+      setPosition({ right: (MODAL_WIDTH / 2 )+ OFFSET, top: OFFSET });
     }
   }, [state.viewMode]);
 
@@ -91,6 +94,9 @@ const MeetingInfo = (props: TMeetingInfoProps) => {
   };
 
   const showCount = meetingIds.length > 1;
+  const jobTitle = meeting?.job_id?.jobRequest_Title;
+  const interviewName = meeting?.user_det?.handled_by;
+  
   return (
     <div className="event-container" onClick={toggle}>
       {showCount && !showAllEvents && (
@@ -137,6 +143,8 @@ const MeetingInfo = (props: TMeetingInfoProps) => {
        </div>
           {meetingIds.map((id) => {
             const event = meetingIdMap[previewMeetingId];
+            const job_Title = event?.job_id?.jobRequest_Title;
+            const interviewer = event?.user_det?.handled_by;
             const date = dayjs(event.start).format("DD MMM YYYY");
             const timeStart = dayjs(event.start).format("HH : mm");
             const timeEnd = dayjs(event.end).format("HH : mm");
@@ -150,8 +158,8 @@ const MeetingInfo = (props: TMeetingInfoProps) => {
                   }}
                 />
                 <div className="event-data">
-                  <div>{event.desc}</div>
-                  <div>{event.summary}</div>
+                <div>{job_Title}</div>
+                <div>{`Interviewer:${interviewer?.firstName}`+' '+`${interviewer.lastName}`}</div>
                   <div>{`Date: ${date} | Time: ${timeStart} - ${timeEnd}`}</div>
                 </div>
               </div>
@@ -162,8 +170,8 @@ const MeetingInfo = (props: TMeetingInfoProps) => {
       <>
         <div className="left-bar" />
         <div className="data-wrap">
-          <div>{meeting.summary}</div>
-          <div>{meeting.desc}</div>
+          <div>{jobTitle}</div>
+          <div>{`Interviewer:${interviewName?.firstName}`+' '+`${interviewName.lastName}`}</div>
           <div>{`Time: ${start.format("hh:mm")} - ${end.format("hh:mm")}`}</div>
         </div>
       </>
